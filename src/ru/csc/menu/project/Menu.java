@@ -1,17 +1,22 @@
 package ru.csc.menu.project;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.regex.Pattern;
 
 /**
  * Created by JV on 09.03.2016.
  */
 public class Menu {
-    private Date date;
+    private GregorianCalendar date;
     private ArrayList<MenuItem> items;
 
-    Menu(Date date) {
-        this.date = date;
+    Menu(String date) {
+        String[] parts = date.split(Pattern.quote("."));
+        this.date = new GregorianCalendar(
+                Integer.parseInt(parts[2]),
+                Integer.parseInt(parts[1]),
+                Integer.parseInt(parts[0]));
         items = new ArrayList<MenuItem>();
     }
 
@@ -30,7 +35,7 @@ public class Menu {
         return items.get(index);
     }
 
-    Date getDate(){
+    GregorianCalendar getDate(){
         return date;
     }
 

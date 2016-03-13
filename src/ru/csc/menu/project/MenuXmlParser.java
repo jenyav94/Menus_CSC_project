@@ -49,7 +49,7 @@ public class MenuXmlParser {
 
                 Element menuElement = (Element) menusList.item(menuInd);
                 String date = menuElement.getAttribute(DATE);
-                Menu menu = new Menu(new Date(date));
+                Menu menu = new Menu(date);
 
                 NodeList itemList = menuElement.getElementsByTagName(ITEM);
 
