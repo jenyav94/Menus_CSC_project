@@ -2,14 +2,12 @@ package ru.csc.menu.project;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by JV on 09.03.2016.
@@ -37,57 +35,70 @@ public class MenuXmlParser {
         return builder.parse(new File(filePath));
     }
 
-    public static ArrayList<Menu> menuArrayForm(String filePath){
+    public static ArrayList<Menu> parseMenu(String filePath) throws Exception {
 
         ArrayList<Menu> menus = new ArrayList<Menu>();
+        Document doc = getDocument(filePath);
 
-        try {
-            Document doc = getDocument(filePath);
-            NodeList menusList = doc.getElementsByTagName(MENU);
+        NodeList menusList = doc.getElementsByTagName(MENU);
 
-            for (int menuInd = 0; menuInd < menusList.getLength(); ++menuInd) {
+        for (int menuInd = 0; menuInd < menusList.getLength(); ++menuInd){
 
-                Element menuElement = (Element) menusList.item(menuInd);
-                String date = menuElement.getAttribute(DATE);
-                Menu menu = new Menu(date);
+            Element menuElement = (Element) menusList.item(menuInd);
+            String date = menuElement.getAttribute(DATE);
+            Menu currentMenu = new Menu(date);
 
-                NodeList itemList = menuElement.getElementsByTagName(ITEM);
+            parseItem(currentMenu, menuElement);
 
-                for (int itemInd = 0; itemInd < itemList.getLength(); ++itemInd) {
+            menus.add(currentMenu);
+        }
 
-                    Element element = (Element) itemList.item(itemInd);
+        return menus;
+    }
 
-                    String name = element.getElementsByTagName(NAME).item(0).getTextContent();
-                    String weight = element.getElementsByTagName(WEIGHT).item(0).getTextContent();
-                    String calorie = element.getElementsByTagName(CALORIES).item(0).getTextContent();
-                    String price = element.getElementsByTagName(PRICE).item(0).getTextContent();
-                    String type = element.getAttribute(TYPE);
-                    String tags = element.getAttribute(TAGS);
+    private static void parseItem(Menu menu, Element menuElement) {
 
-                    Element composition = (Element) element.getElementsByTagName(COMPOSITION).item(0);
-                    ArrayList<String> ingredients = null;
-                    if (composition != null) {
-                        NodeList ingredientsList = composition.getElementsByTagName(INGREDIENT);
-                        ingredients = new ArrayList<String>();
-                        for (int ingredientInd = 0; ingredientInd < ingredientsList.getLength(); ++ingredientInd) {
-                            ingredients.add(ingredientsList.item(ingredientInd).getTextContent());
-                        }
-                    }
+        NodeList itemList = menuElement.getElementsByTagName(ITEM);
 
-                    menu.addItem(type, tags, name, Double.parseDouble(weight), Double.parseDouble(calorie),
-                            Double.parseDouble(price), ingredients);
-                }
+        for (int itemInd = 0; itemInd < itemList.getLength(); ++itemInd) {
 
-                menus.add(menu);
-            }
+            Element itemElement = (Element) itemList.item(itemInd);
 
-            return menus;
+            String name = getUniqueItemTextContent(itemElement, NAME);
+            String weight = getUniqueItemTextContent(itemElement, WEIGHT);
+            String calories = getUniqueItemTextContent(itemElement, CALORIES);
+            String price = getUniqueItemTextContent(itemElement, PRICE);
+            String type = getUniqueItemTextContent(itemElement, TYPE);
+            String tags = getUniqueItemTextContent(itemElement, TAGS);
+            ArrayList<String> composition = getArrayItemTextContent(itemElement, COMPOSITION);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            menu.addItem(type, tags, name, Double.parseDouble(weight), Double.parseDouble(calories),
+                    Double.parseDouble(price), composition);
+        }
+    }
+
+    private static ArrayList<String> getArrayItemTextContent(Element itemElement, String tagName) {
+
+        NodeList tagList = itemElement.getElementsByTagName(tagName);
+
+        ArrayList<String> textContentArray = new ArrayList<String>();
+
+        for (int itemInd = 0; itemInd < tagList.getLength(); ++itemInd) {
+            String ingredient = getUniqueItemTextContent((Element) tagList.item(itemInd), INGREDIENT);
+            textContentArray.add(ingredient);
+        }
+
+        return textContentArray;
+    }
+
+    private static String getUniqueItemTextContent(Element itemElement, String tagName) {
+
+        NodeList tagList = itemElement.getElementsByTagName(tagName);
+
+        if (tagList.getLength() > 0){
+            return tagList.item(0).getTextContent();
         }
 
         return null;
     }
-
 }

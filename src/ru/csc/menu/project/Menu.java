@@ -35,6 +35,10 @@ public class Menu {
         return items.get(index);
     }
 
+    int numberOfItems () {
+        return items.size();
+    }
+
     GregorianCalendar getDate(){
         return date;
     }
