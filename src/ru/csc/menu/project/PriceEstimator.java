@@ -43,7 +43,7 @@ public class PriceEstimator {
         double sum = 0;
         int numberOfSum = 0;
         for (double price : pricesByType) {
-            if (price > leftBorder && price < rightBorder) {
+            if (price > leftBorder && price < rightBorder && price > 0) {
                 sum += price;
                 ++numberOfSum;
             }
