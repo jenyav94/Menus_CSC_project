@@ -9,9 +9,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
 
-/**
- * Created by JV on 09.03.2016.
- */
+
 public class MenuXmlParser {
 
     private static final String MENU = "menu";
@@ -42,7 +40,7 @@ public class MenuXmlParser {
 
         NodeList menusList = doc.getElementsByTagName(MENU);
 
-        for (int menuInd = 0; menuInd < menusList.getLength(); ++menuInd){
+        for (int menuInd = 0; menuInd < menusList.getLength(); ++menuInd) {
 
             Element menuElement = (Element) menusList.item(menuInd);
             String date = menuElement.getAttribute(DATE);
@@ -68,12 +66,23 @@ public class MenuXmlParser {
             String weight = getUniqueItemTextContent(itemElement, WEIGHT);
             String calories = getUniqueItemTextContent(itemElement, CALORIES);
             String price = getUniqueItemTextContent(itemElement, PRICE);
-            String type = getUniqueItemTextContent(itemElement, TYPE);
-            String tags = getUniqueItemTextContent(itemElement, TAGS);
+            String type = itemElement.getAttribute(TYPE);
+            String tags = itemElement.getAttribute(TAGS);
             ArrayList<String> composition = getArrayItemTextContent(itemElement, COMPOSITION);
+
+            if (weight == null) {
+                weight = "-1";
+            }
+            if (calories == null) {
+                calories = "-1";
+            }
+            if (price == null) {
+                price = "-1";
+            }
 
             menu.addItem(type, tags, name, Double.parseDouble(weight), Double.parseDouble(calories),
                     Double.parseDouble(price), composition);
+
         }
     }
 
@@ -95,7 +104,7 @@ public class MenuXmlParser {
 
         NodeList tagList = itemElement.getElementsByTagName(tagName);
 
-        if (tagList.getLength() > 0){
+        if (tagList.getLength() > 0) {
             return tagList.item(0).getTextContent();
         }
 

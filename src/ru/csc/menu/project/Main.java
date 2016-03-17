@@ -1,20 +1,29 @@
 package ru.csc.menu.project;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.GregorianCalendar;
 
-/**
- * Created by JV on 09.03.2016.
- */
 public class Main {
     public static void main(String[] args) throws Exception {
 
-        ArrayList<Menu> menus = MenuXmlParser.parseMenu("C:\\Users\\--\\IdeaProjects\\Menus_CSC_project\\src\\menu.xml");
-        for (int i = 0; i < menus.size(); ++i) {
-            for (int j = 0; j < menus.get(i).numberOfItems(); ++j) {
-                System.out.print(menus.get(i).getItem(j).getPrice() + " ");
-            }
-            System.out.println();
+
+        final File folder = new File("src/in");
+        ArrayList<Menu> menus = new ArrayList<Menu>();
+
+        for (final File fileEntry : folder.listFiles()) {
+            menus.addAll(MenuXmlParser.parseMenu(fileEntry.getPath()));
         }
+
+        String[] types = {"garnish", "main course", "soup", "salad"};
+        GregorianCalendar from = new GregorianCalendar(2015, 2, 1);
+        GregorianCalendar to = new GregorianCalendar(2017, 2, 29);
+
+
+        PriceEstimator estimator = new PriceEstimator(menus, from, to);
+        for (String type : types) {
+            System.out.println(estimator.getMeanValue(type));
+        }
+
     }
 }

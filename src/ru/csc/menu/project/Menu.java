@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.regex.Pattern;
 
-/**
- * Created by JV on 09.03.2016.
- */
+
 public class Menu {
     private GregorianCalendar date;
     private ArrayList<MenuItem> items;
@@ -27,23 +25,25 @@ public class Menu {
                  double calorie,
                  double price,
                  ArrayList<String> composition
-    ){
+    ) {
         items.add(new MenuItem(type, tags, name, weight, calorie, price, composition));
+
     }
 
-    MenuItem getItem(int index){
+    MenuItem getItem(int index) {
         return items.get(index);
     }
 
-    int numberOfItems () {
+    int numberOfItems() {
         return items.size();
     }
 
-    GregorianCalendar getDate(){
+    GregorianCalendar getDate() {
         return date;
     }
 
-    public class MenuItem{
+
+    public class MenuItem {
 
         private String type;
         private String tags;
@@ -53,15 +53,14 @@ public class Menu {
         private double price;
         private ArrayList<String> composition;
 
-        MenuItem (String type,
-                  String tags,
-                  String name,
-                  double weight,
-                  double calorie,
-                  double price,
-                  ArrayList<String> composition
-                  )
-        {
+        MenuItem(String type,
+                 String tags,
+                 String name,
+                 double weight,
+                 double calorie,
+                 double price,
+                 ArrayList<String> composition
+        ) {
             this.type = type;
             this.tags = tags;
             this.name = name;
